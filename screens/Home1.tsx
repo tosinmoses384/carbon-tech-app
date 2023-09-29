@@ -1,5 +1,13 @@
-import * as React from "react";
-import { ScrollView, StyleSheet, View, Text, Pressable } from "react-native";
+// import * as React from "react";
+import { useEffect } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -10,8 +18,57 @@ import {
   StyleVariable,
   Border,
 } from "../GlobalStyles";
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const Home1 = () => {
+  useEffect(() => {
+    const subscription1 = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("NOTIFICATION RECEIVED");
+        console.log(notification);
+        const userName = notification.request.content.data.userName;
+        console.log(userName);
+      }
+    );
+
+    const subscription2 = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        console.log("NOTIFICATION RESPONSE RECEIVED");
+        console.log(response);
+        const userName = response.notification.request.content.data.userName;
+        console.log(userName);
+      }
+    );
+
+    return () => {
+      subscription1.remove();
+      subscription2.remove();
+    };
+  }, []);
+
+  function scheduleNotificationHandler() {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "My first local notification",
+        body: "This is the body of the notification.",
+        data: { userName: "Max" },
+      },
+      trigger: {
+        seconds: 5,
+      },
+    });
+  }
+
   return (
     <View style={styles.home1}>
       <ScrollView
@@ -64,11 +121,15 @@ const Home1 = () => {
                   />
                 </View>
               </View>
-              <View style={[styles.button, styles.buttonFlexBox]}>
-                <Text style={[styles.longButton, styles.youTypo]}>
-                  Withdraw Balance
-                </Text>
-              </View>
+
+              <TouchableOpacity onPress={scheduleNotificationHandler}>
+                <View style={[styles.button, styles.buttonFlexBox]}>
+                  <Text style={[styles.longButton, styles.youTypo]}>
+                    Withdraw Balance
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
             </LinearGradient>
             <LinearGradient
               style={styles.promisesShadowBox}
@@ -252,225 +313,231 @@ const Home1 = () => {
             </View>
           </View>
         </View>
-        <View style={styles.frameContainer}>
-          <View
-            style={[styles.recentBlessingsParent, styles.component4FlexBox]}
-          >
-            <Text style={[styles.trendingBlessings1, styles.viewAllLayout]}>
-              Recent Blessings
-            </Text>
-            <Text style={[styles.viewAll, styles.chuksTypo]}>View all</Text>
+
+
+
+        
+          <View 
+          
+          style={styles.frameContainer}>
+            <View
+              style={[styles.recentBlessingsParent, styles.component4FlexBox]}
+            >
+              <Text style={[styles.trendingBlessings1, styles.viewAllLayout]}>
+                Recent Blessings
+              </Text>
+              <Text style={[styles.viewAll, styles.chuksTypo]}>View all</Text>
+            </View>
+
+
+            {/* SCROLL START */}
+            {/* <View
+              // style={[styles.blessings1, styles.blessings1SpaceBlock]}
+              // showsVerticalScrollIndicator={true}
+              // showsHorizontalScrollIndicator={false}
+              // contentContainerStyle={styles.blessingsScrollViewContent}
+            > */}
+              <View style={styles.blessingsBorder}>
+                <View style={styles.rectangleParent}>
+                  <Image
+                    style={[styles.frameItem, styles.frameItemLayout]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-5626.png")}
+                  />
+                  <View style={styles.performance}>
+                    <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
+                      Blessings don drop!
+                    </Text>
+                    <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
+                      @davido sent you N50,000
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fulfilledParent}>
+                  <Text style={[styles.fulfilled, styles.receivedLayout]}>
+                    Fulfilled
+                  </Text>
+                  <Text style={[styles.minsAgo, styles.receivedLayout]}>
+                    2mins ago
+                  </Text>
+                </View>
+              </View>
+              <View style={[styles.blessings3, styles.blessingsBorder]}>
+                <View style={styles.rectangleParent}>
+                  <Image
+                    style={[styles.frameItem, styles.frameItemLayout]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-5626.png")}
+                  />
+                  <View style={styles.performance}>
+                    <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
+                      Blessings don drop!
+                    </Text>
+                    <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
+                      @davido sent you N50,000
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fulfilledParent}>
+                  <Text style={[styles.fulfilled, styles.receivedLayout]}>
+                    Fulfilled
+                  </Text>
+                  <Text style={[styles.minsAgo, styles.receivedLayout]}>
+                    2mins ago
+                  </Text>
+                </View>
+              </View>
+              <View style={[styles.blessings3, styles.blessingsBorder]}>
+                <View style={styles.rectangleParent}>
+                  <Image
+                    style={[styles.frameItem, styles.frameItemLayout]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-5626.png")}
+                  />
+                  <View style={styles.performance}>
+                    <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
+                      Blessings don drop!
+                    </Text>
+                    <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
+                      @davido sent you N50,000
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fulfilledParent}>
+                  <Text style={[styles.fulfilled, styles.receivedLayout]}>
+                    Fulfilled
+                  </Text>
+                  <Text style={[styles.minsAgo, styles.receivedLayout]}>
+                    2mins ago
+                  </Text>
+                </View>
+              </View>
+              <View style={[styles.blessings3, styles.blessingsBorder]}>
+                <View style={styles.rectangleParent}>
+                  <Image
+                    style={[styles.frameItem, styles.frameItemLayout]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-5626.png")}
+                  />
+                  <View style={styles.performance}>
+                    <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
+                      Blessings don drop!
+                    </Text>
+                    <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
+                      @davido sent you N50,000
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fulfilledParent}>
+                  <Text style={[styles.fulfilled, styles.receivedLayout]}>
+                    Fulfilled
+                  </Text>
+                  <Text style={[styles.minsAgo, styles.receivedLayout]}>
+                    2mins ago
+                  </Text>
+                </View>
+              </View>
+              <View style={[styles.blessings3, styles.blessingsBorder]}>
+                <View style={styles.rectangleParent}>
+                  <Image
+                    style={[styles.frameItem, styles.frameItemLayout]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-5626.png")}
+                  />
+                  <View style={styles.performance}>
+                    <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
+                      Blessings don drop!
+                    </Text>
+                    <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
+                      @davido sent you N50,000
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fulfilledParent}>
+                  <Text style={[styles.fulfilled, styles.receivedLayout]}>
+                    Fulfilled
+                  </Text>
+                  <Text style={[styles.minsAgo, styles.receivedLayout]}>
+                    2mins ago
+                  </Text>
+                </View>
+              </View>
+
+
+              {/* <View style={[styles.blessings3, styles.blessingsBorder]}>
+                <View style={styles.totalWalletBalanceWrapper}>
+                  <Image
+                    style={[styles.rectangleIcon, styles.frameItemLayout]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-56261.png")}
+                  />
+                  <View style={styles.performance}>
+                    <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
+                      Blessings don drop!
+                    </Text>
+                    <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
+                      @havy promised you N10,000
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.fulfilledParent}>
+                  <Text style={[styles.pending, styles.receivedLayout]}>
+                    Pending
+                  </Text>
+                  <Text style={[styles.minsAgo, styles.receivedLayout]}>
+                    2mins ago
+                  </Text>
+                </View>
+              </View> */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           
+            {/* SCROLL END */}
+
+
+
+
+
+
+
           </View>
-          <ScrollView
-            style={[styles.blessings1, styles.blessings1SpaceBlock]}
-            showsVerticalScrollIndicator={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.blessingsScrollViewContent}
-          >
-            <View style={styles.blessingsBorder}>
-              <View style={styles.rectangleParent}>
-                <Image
-                  style={[styles.frameItem, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-5626.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @davido sent you N50,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.fulfilled, styles.receivedLayout]}>
-                  Fulfilled
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.rectangleParent}>
-                <Image
-                  style={[styles.frameItem, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-5626.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @davido sent you N50,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.fulfilled, styles.receivedLayout]}>
-                  Fulfilled
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.totalWalletBalanceWrapper}>
-                <Image
-                  style={[styles.rectangleIcon, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-56261.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @havy promised you N10,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.pending, styles.receivedLayout]}>
-                  Pending
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.totalWalletBalanceWrapper}>
-                <Image
-                  style={[styles.rectangleIcon, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-56261.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @havy promised you N10,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.pending, styles.receivedLayout]}>
-                  Pending
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.totalWalletBalanceWrapper}>
-                <Image
-                  style={[styles.rectangleIcon, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-56261.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @havy promised you N10,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.pending, styles.receivedLayout]}>
-                  Pending
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.totalWalletBalanceWrapper}>
-                <Image
-                  style={[styles.rectangleIcon, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-56261.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @havy promised you N10,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.pending, styles.receivedLayout]}>
-                  Pending
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.totalWalletBalanceWrapper}>
-                <Image
-                  style={[styles.rectangleIcon, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-56261.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @havy promised you N10,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.pending, styles.receivedLayout]}>
-                  Pending
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.blessings3, styles.blessingsBorder]}>
-              <View style={styles.totalWalletBalanceWrapper}>
-                <Image
-                  style={[styles.rectangleIcon, styles.frameItemLayout]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-56261.png")}
-                />
-                <View style={styles.performance}>
-                  <Text style={[styles.blessingsDonDrop, styles.mFollowersClr]}>
-                    Blessings don drop!
-                  </Text>
-                  <Text style={[styles.davidoSentYou, styles.receivedLayout]}>
-                    @havy promised you N10,000
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.fulfilledParent}>
-                <Text style={[styles.pending, styles.receivedLayout]}>
-                  Pending
-                </Text>
-                <Text style={[styles.minsAgo, styles.receivedLayout]}>
-                  2mins ago
-                </Text>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
+        
+
+
+
+
+
       </ScrollView>
-      <View style={[styles.component4, styles.component4FlexBox]}>
+
+      {/* <View style={[styles.component4, styles.component4FlexBox]}>
         <View style={styles.home}>
           <Image
             style={styles.icons}
@@ -493,7 +560,10 @@ const Home1 = () => {
           contentFit="cover"
           source={require("../assets/nav-icons--22.png")}
         />
-      </View>
+      </View> */}
+
+
+      
     </View>
   );
 };
@@ -951,9 +1021,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   frameContainer: {
-    height: 190,
+    // height: 190,
     marginTop: 26,
     alignSelf: "stretch",
+
+
+
+
+    borderColor: Color.appColorsStrokeColorsNormal,
+    borderTopWidth: 5,
   },
   topBarParent: {
     zIndex: 0,
